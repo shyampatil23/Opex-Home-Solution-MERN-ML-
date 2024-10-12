@@ -1,1 +1,1 @@
-# Opex-Home-Solution-React-Node-ML-
+# Opex-Home-Solution-MERN-ML-
