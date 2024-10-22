@@ -82,7 +82,7 @@ data = pd.read_csv('C:/Users/infin/OneDrive/Desktop/Opex_Home_Solutions/AI_ML/cl
 price_model = PricePredictionModel(data)
 price_model.train_model()
 
-# Predict a sample price
+# Predict sample price
 sample_features = {
     "name": "Cottage",
     "area": 1500,
