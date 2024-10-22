@@ -1,10 +1,11 @@
 import React from "react";
+import "../styles/fixed-bg.css";
 import "../styles/style.css";
 
 const about = () => {
   return (
     <>
-      <main className="col-sm-12 col-md-12 col-lg-12 col-xl-12 about p-5">
+      <main className="col-sm-12 col-md-12 col-lg-12 col-xl-12 about p-5 fixed-bg">
 
         <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12 container my-5">
           <div className="col-sm-12 col-md-12 col-lg-12 col-xl-12 row">

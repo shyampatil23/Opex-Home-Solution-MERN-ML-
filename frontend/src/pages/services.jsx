@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/fixed-bg.css";
 import "../styles/style.css";
 import { Link } from "react-router-dom";
 
@@ -6,9 +7,9 @@ import { Link } from "react-router-dom";
 const services = () => {
   return (
     <>
-      <main className="col-sm-12 col-md-12 col-lg-12 col-xl-12 services p-5">
+      <main className="col-sm-12 col-md-12 col-lg-12 col-xl-12 services p-5 fixed-bg">
         <h1 className="text-center mb-4">Our Services</h1>
-        <div className="row g-4 px-5">
+        <div className="row g-4">
           <div className="col-md-3">
             <div className="card border border-dark">
               <Link

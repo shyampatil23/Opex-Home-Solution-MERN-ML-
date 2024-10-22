@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
+import "../styles/fixed-bg.css";
 import "../styles/style.css";
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 
 const Home = () => {
   const [houses, setHouses] = useState([]);
@@ -9,10 +9,12 @@ const Home = () => {
   const [design, setDesign] = useState("");
   const [price, setPrice] = useState("");
   const [area, setArea] = useState("");
-  const [searchQuery, setSearchQuery] = useState(""); 
+  const [searchQuery, setSearchQuery] = useState("");
   const [viewMoreCount, setViewMoreCount] = useState({});
-  const [showCategory, setShowCategory] = useState(null); 
+  const [showCategory, setShowCategory] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
+  // Fetch all houses from the API on component mount
   useEffect(() => {
     fetch("/api/houses")
       .then((response) => response.json())
@@ -27,6 +29,7 @@ const Home = () => {
       .catch((error) => console.error("Fetch error:", error));
   }, []);
 
+  // Filters houses based on the selected design, price, and area
   const filterHouses = () => {
     const filtered = houses.filter((house) => {
       const housePrice = house.price || null;
@@ -50,27 +53,33 @@ const Home = () => {
     setShowCategory(design || null);
   };
 
+  // Handles the NLP search functionality based on search query input
   const handleSearch = () => {
+    setIsLoading(true);
+    setFilteredHouses([]); // Clear previous results
+    setShowCategory(null); // Reset category visibility
     fetch("http://localhost:5000/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ query: searchQuery }), 
+      body: JSON.stringify({ query: searchQuery }),
     })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        return response.json(); 
+        return response.json();
       })
       .then((data) => {
         setFilteredHouses(data);
-        setShowCategory(data.length > 0 ? data[0].name : null); 
+        setShowCategory(data.length > 0 ? data[0].name : null); // Show only the relevant category
       })
-      .catch((error) => console.error("Search error:", error));
+      .catch((error) => console.error("Search error:", error))
+      .finally(() => setIsLoading(false));
   };
 
+  // Handles 'View More' button functionality for each category
   const handleViewMore = (category) => {
     setViewMoreCount((prev) => ({
       ...prev,
@@ -78,7 +87,9 @@ const Home = () => {
     }));
   };
 
+  // Renders house cards by category, with support for 'View More' button
   const renderHouseListByCategory = (category) => {
+    // Only display the category if it matches the current search
     if (showCategory && category !== showCategory) return null;
 
     const filteredByCategory = filteredHouses.filter(
@@ -143,10 +154,8 @@ const Home = () => {
   };
 
   return (
-    <main className="col-sm-12 col-md-12 col-lg-12 col-xl-12 main p-5">
-      <div className="text-center findby">
-        Search by
-      </div>
+    <main className="col-sm-12 col-md-12 col-lg-12 col-xl-12 main p-5 fixed-bg">
+      <div className="text-center findby">Search by</div>
       <div className="container input-group search-input mt-4 mb-5">
         <input
           type="text"
@@ -164,6 +173,7 @@ const Home = () => {
           <i className="fa fa-search"></i>
         </button>
       </div>
+
       <div className="container">
         <div className="row justify-content-center">
           <span className="findby text-center">Find by</span>
@@ -177,7 +187,9 @@ const Home = () => {
               <option value="Bungalow">Bungalow</option>
               <option value="Villa">Villa</option>
               <option value="Building">Buildings</option>
+              <option value="Office">Office</option>
               <option value="Complex">Complex</option>
+              <option value="Cape Cod">Cape Cod</option>
               <option value="Penthouse">Penthouse</option>
               <option value="Farmhouses">Farmhouses</option>
             </select>
@@ -216,19 +228,57 @@ const Home = () => {
           </span>
           <button
             id="findButton"
-            className="col-1 btn btn-outline-light find-btn"
+            className="col-1 btn btn-outline-light white-btn"
             onClick={filterHouses}
           >
             Find
           </button>
         </div>
       </div>
-
-      <div className="container">
-        {["Bungalow", "Villa", "Building", "Complex", "Office", "Appartment", "Cottage"].map((category) =>
-          renderHouseListByCategory(category)
-        )}
-      </div>
+      {isLoading ? (
+        <div className="loading-animation">
+          <p>Finding relevant searched designs...</p>
+          <div className="spinner-border text-warning" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      ) : (
+        <div className="container">
+          {[
+            "Bungalow",
+            "Villa",
+            "Building",
+            "Complex",
+            "Office",
+            "Farmhouses",
+            "Penthouse",
+            "Cape Cod",
+            "Colonial",
+            "Cottage",
+            "Studio",
+            "Bookstore",
+            "Store",
+            "Shop",
+            "Cafe",
+            "Caffe",
+            "Bakery",
+            "Hotel",
+            "Apartment",
+            "Appartment",
+            "Bank",
+            "Office_building",
+            "Commercial_building",
+            "Center",
+            "Headquarters",
+            "Factory",
+            "Industry",
+          ].map((category) => (
+            <React.Fragment key={category}>
+              {renderHouseListByCategory(category)}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
     </main>
   );
 };

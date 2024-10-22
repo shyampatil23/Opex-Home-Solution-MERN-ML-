@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\infin\OneDrive\Desktop\Opex_Home_Solutions\AI_ML\venv
+set VIRTUAL_ENV=C:\Users\infin\OneDrive\Desktop\Opex-Home-Solution-React-Node-ML-\AI_ML\venv
 
 if not defined PROMPT set PROMPT=$P$G
 

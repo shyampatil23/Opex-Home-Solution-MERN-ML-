@@ -55,4 +55,7 @@ export const getRelatedDesigns = async (req, res) => {
   }
 };
 
+// Route for fetching related designs based on price, area, and land option
+router.post("/api/related-designs", getRelatedDesigns);
+
 export default router;

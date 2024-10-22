@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/fixed-bg.css";
 import "../styles/style.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -38,7 +39,7 @@ const contact = () => {
 
   return (
     <>
-      <main className="col-sm-12 col-md-12 col-lg-12 col-xl-12 contact d-flex justify-content-center p-5">
+      <main className="col-sm-12 col-md-12 col-lg-12 col-xl-12 contact d-flex justify-content-center p-5 fixed-bg">
         <form
           className="col-sm-12 col-md-10 col-lg-6 col-xl-6"
           onSubmit={onSubmit}

@@ -1,5 +1,5 @@
 import House from "../models/House.js";
-import { exec } from "child_process";
+import { execSync } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -19,76 +19,74 @@ export const getAllHouses = async (req, res) => {
 };
 
 // Function to search houses
-export const searchHouses = (req, res) => {
+export const searchHouses = async (req, res) => {
   const { query } = req.body;
-
-  // Define the Python script path
   const scriptPath = path.join(__dirname, "../../AI_ML/nlp_search.py");
 
-  // Execute the Python script with the query as an argument
-  exec(`python ${scriptPath} "${query}"`, async (error, stdout, stderr) => {
-    if (error || stderr) {
-      console.error(
-        `Error executing Python script: ${error?.message || stderr}`
-      );
-      return res.status(500).json({ message: "Search error" });
-    }
+  try {
+    // Execute the Python script with the query as an argument
+    const stdout = execSync(`python ${scriptPath} "${query}"`).toString();
+    const searchResults = JSON.parse(stdout);
 
-    try {
-      const searchResults = JSON.parse(stdout);
+    // Fetch data for each search result from the database
+    const houseData = await Promise.all(
+      searchResults.map(async (result) => {
+        const house = await House.findById(result._id);
 
-      const houseData = await Promise.all(
-        searchResults.map(async (result) => {
-          const house = await House.findById(result._id);
+        if (house) {
+          return {
+            ...result,
+            images: house.images,
+            desp: house.desp,
+            price: house.price,
+            area: house.area,
+            material: house.material,
+            landOptions: house.landOptions,
+            contractor: house.contractor,
+            type: house.type,
+          };
+        }
+        return result;
+      })
+    );
 
-          if (house) {
-            return {
-              ...result,
-              images: house.images,
-              desp: house.desp,
-              price: house.price,
-              area: house.area,
-              material: house.material,
-              landOptions: house.landOptions,
-              contractor: house.contractor,
-              type: house.type,
-            };
-          } else {
-            return result;
-          }
-        })
-      );
-
-      res.json(houseData);
-    } catch (jsonError) {
-      console.error("JSON parsing error:", jsonError);
-      res.status(500).json({ message: "Failed to parse search results" });
-    }
-  });
+    res.json(houseData);
+  } catch (error) {
+    console.error("Search execution or parsing error:", error);
+    res.status(500).json({ message: "Search error", error: error.message });
+  }
 };
 
 // Function to predict price
 export const predictPrice = (req, res) => {
   const { name, area, landOptions } = req.body;
-
-  // Define the Python script path
   const scriptPath = path.join(__dirname, "../../AI_ML/price_prediction.py");
 
-  // Execute the Python script with parameters
-  exec(
-    `python ${scriptPath} "${name}" ${area} "${landOptions}"`,
-    (error, stdout, stderr) => {
-      if (error || stderr) {
-        console.error("Error in price prediction:", error || stderr);
-        return res.status(500).json({ error: "Error in price prediction" });
-      }
+  try {
+    // Execute the Python script with parameters
+    const stdout = execSync(
+      `python ${scriptPath} "${name}" ${area} "${landOptions}"`
+    ).toString();
 
-      // Extract only the predicted price from the output
-      const output = stdout.trim();
-      const price = parseFloat(output.split(" ")[0]); // Assuming price is the first part of the output
+    // Extract only the predicted price from the output
+    const output = stdout.trim();
+    const price = parseFloat(output.split(" ")[0]);
 
-      // Return the predicted price
-      res.status(200).json({ price });
+    // Validate the extracted price
+    if (isNaN(price)) {
+      return res
+        .status(500)
+        .json({
+          error: "Invalid price format returned from prediction script",
+        });
     }
-  );
+
+    // Return the predicted price
+    res.status(200).json({ price });
+  } catch (error) {
+    console.error("Error in price prediction:", error);
+    res
+      .status(500)
+      .json({ error: "Error in price prediction", details: error.message });
+  }
 };

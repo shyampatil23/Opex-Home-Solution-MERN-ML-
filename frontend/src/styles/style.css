@@ -2,13 +2,6 @@ body {
   font-family: "Titillium Web", sans-serif;
 }
 
-main {
-  background-color: #0a0c10;
-  min-height: 80vh;
-  color: white;
-}
-
-
 .search-input {
   width: 70rem;
 }
@@ -38,6 +31,14 @@ main {
     .valid-feedback
   ):not(.invalid-tooltip):not(.invalid-feedback) {
   outline: 1px solid black;
+}
+
+.loading-animation {
+  text-align: center;
+  margin: 20px 0;
+}
+.spinner-border {
+  margin-top: 10px;
 }
 
 .findby {

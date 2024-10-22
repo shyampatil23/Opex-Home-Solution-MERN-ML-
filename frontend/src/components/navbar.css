@@ -1,8 +1,7 @@
 .nav-bar {
   position: sticky;
   top: 0;
-  z-index: 1;
-  background-color: #0a0c10;
+  z-index: 5;
 }
 
 .nav {
@@ -55,103 +54,4 @@
   .mode {
     padding-right: 0;
   }
-}
-
-body.dark {
-  background-color: #0a0c10;
-  color: white;
-}
-
-body.dark .nav-bar {
-  background-color: #131315;
-  color: white;
-  box-shadow: 0 0 10px rgba(238, 235, 235, 0.1),
-    -20px -20px 60px rgba(0, 0, 0, 0.5);
-}
-
-body.dark .nav {
-  box-shadow: 0 0 10px rgba(238, 235, 235, 0.1),
-    -20px -20px 60px rgba(0, 0, 0, 0.5);
-}
-
-body.dark footer section {
-  background-color: #131315;
-  color: white;
-  box-shadow: 0 0 10px rgba(238, 235, 235, 0.1),
-    -20px -20px 60px rgba(0, 0, 0, 0.5);
-}
-
-/* Light Mode Styles */
-body.light {
-  background-color: #f0f0f0;
-  color: black;
-}
-
-body.light .nav-bar {
-  background-color: #f8f9fa;
-  color: #343a40;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-body.light .nav {
-  background-color: #f1f3f5;
-  color: #343a40;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-body.light .nav {
-  background-color: #f1f3f5;
-  color: #343a40;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-body.light .main {
-  background-color: #e9ecef;
-  color: #495057;
-}
-body.light .find-btn {
-  background-color: white;
-  color: black;
-  border: 1px solid black;
-}
-
-body.light .services {
-  background-color: #e9ecef;
-  color: #495057;
-}
-body.light .about {
-  background-color: #e9ecef;
-  color: #495057;
-}
-
-body.light .contact {
-  background-color: #e9ecef;
-  color: #495057;
-}
-body.light .btn-outline-warning {
-  background-color: #ffc107;
-  color: #495057;
-}
-
-body.light footer section {
-  background-color: #f1f3f5;
-  color: #495057;
-}
-
-body.light .card {
-  background-color: #ffffff;
-  color: black;
-}
-
-.theme-toggle-btn {
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 5px 10px;
-  border-radius: 5px;
-}
-
-.theme-toggle-btn:hover {
-  background-color: rgba(0, 0, 0, 0.1);
 }
